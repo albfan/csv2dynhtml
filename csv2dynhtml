@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#set -xv
+
+APP=$(basename "$0")
+DIR=$(dirname "$0")
+if [ $# -lt 1 ]
+then
+  FILE=/dev/stdin
+  FILENAME=input
+  echo Using $FILE as input >&2
+  echo Using $FILENAME as filename >&2
+else
+  FILE="$1"
+  FILENAME=$(basename "${FILE%.*}")
+fi
+
+pandoc "$FILE" -f csv -t html --metadata title="$FILENAME" --template "$DIR/csv2dynhtml-pandoc-template.html" | "$DIR/csv2dynhtml-transform.py" > "$FILENAME.html"
